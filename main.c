@@ -1,7 +1,13 @@
 #include <stdio.h>
 
-int main()
+int main(int argc,char* argv[])
 {
-	printf("Hello, World!\n");
-	return 0;
+FILE *f;
+char buffer[256];
+f = fopen(argv[1],"r");
+while((fgets(buffer,256,f))!=NULL){
+printf("%s",buffer);
+}
+fclose(f);
+return 0;
 }
