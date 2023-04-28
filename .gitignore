@@ -1,0 +1,8 @@
+main
+# no *.o or *.a files
+*.[oa]
+# no temporary files
+*~
+*swp
+# but track input.txt
+! input.txt
