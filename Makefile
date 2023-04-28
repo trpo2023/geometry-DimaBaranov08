@@ -56,5 +56,5 @@ run:
 	./$(APP_PATH)
 
 clean:
-	@rm -f  $(APP_PATH) $(LIB_PATH) $(LIB_OBJECTS) $(APP_OBJECTS) $(DEPS)
+	@rm -f  $(APP_PATH) $(LIB_PATH) $(TEST_OBJ) $(LIB_OBJECTS) $(APP_OBJECTS) $(DEPS)
 	
