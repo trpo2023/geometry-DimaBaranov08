@@ -1,197 +1,46 @@
-#include <ctype.h>
+#include <libgeometry/parser.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
- 
-int check_figure(const char *s)
-{
-    char figure[6] = "circle";
-    int len = strlen(figure);
-    char tmp[len];
-    for (int i = 0; i < len; i++)
-    {
-        tmp[i] = s[i];
-    }
-
-    if (strcmp(tmp, figure) != 0) return 0;
-    return 1;
-}
-
-int left_bracket(const char *s)
-{
-    for (int i = 0; i < ) 
-}
-
-void print_error(const char *s, char *x, char *y, char *rad)
-{
-    int error = 0;
-    if (!check_figure(s)) 
-    {
-        error = 1;
-        printf("Error expected 'circle'\n");
-    }
-    if (error == 0)
-    {
-        puts(s);
-        printf("None errors\n");
-    } 
-}
-
-void parser(const char * s)
-{
-    char x[10], y[10], rad[10];
-    print_error(s, x, y, rad);
-}
+#define pi 3.14
 
 int main()
 {
-    FILE* file;
-    file = fopen("test.txt", "r");
-    int i, ind_open_bracket = 0, ind_close_bracket = 0, ind_last_num_elm = 0, ind_first_num_elm = 0, ind_second_num_elm = 0;
-    int l = 0, c = 0, e = 0, error = 0;
-    int newflag=0;
-    while (1) {
-        e = fgetc(file);
-        if (e == EOF) {
-            if (feof(file) != 0) {
-                break;
-            }
-        }
-        c++;
+    char input[100];
+    int a;
+    
+
+    const char* input_f = "InputGeometry.txt";
+    FILE* file = fopen(input_f, "r");
+    if (file == NULL) {
+        printf("Error: can't open input file:\n");
+        printf("%s\n", input_f);
+        fscanf(file, "%d", &a);
+        
+       
+
+        return 1;
     }
-    l = c;
+    while (!feof(file)) {
+        fgets(input, 100, file);
+        input[strcspn(input, "\n")] = '\0';
+        //printf("area: %d\n", area_check((char*)input));
+        int radius = area_check((char*)input);
+        printf("radius= %d \n", radius);
+        int ar = area(radius);
+        printf("area = %d \n", ar);
+        int peri = per(radius);
+        printf("perimetr= %d \n", peri);
+        
+        if (check_input(input)) {
+            return 1;
+        }
+    }
+    //double ar = area((char*)input);
+    
+    //check_circle((char*)input);
+
     fclose(file);
-    char a[l], b[6] = "circle";
-    file = fopen("test.txt", "r");
-    while (fgets(a, l + 1, file)) {
-        printf("%s", a);
-        for (i = 0; i < 7; i++) {
-            if (a[i] != b[i] && i < 6) {
-                printf("\nError at column %d: expected 'circle'\n", i);
-                error = 1;
-                break;
-            }
-            ind_open_bracket = i;
-        }
-
-        for (i = 0; i < l; i++) {
-            if (a[i] == ')') {
-                ind_close_bracket = i;
-            } else {
-                ind_close_bracket = l - 1;
-            }
-        }
-        for (i = ind_open_bracket + 1; a[i] != ' '; i++) {
-            if (error == 0) {
-                if (a[i] == ',') {
-                    error = 1;
-                    printf("\nError at column %d: expected '<space>' and " "'<double>'\n", i);
-                    break;
-                }
-                if (isdigit(a[i]) == 0 && a[i] != '.') {
-                    error = 1;
-                    printf("\nError at column %d: expected '<double>'\n", i);
-                    break;
-                }
-                ind_first_num_elm = i;
-            } else {
-                  break;
-            }
-        }
-    
-        for(i=ind_first_num_elm+2;i<20;i++){
-            if(a[i]=='.' && isdigit(a[i+1]) == 0){
-                    if(newflag==0){
-                    newflag=1;
-                }else{
-                    printf("\nError at column %d",a[i]-32);
-                error=1;
-                printf("\n");
-                    break;
-                }
-                }
-            }
-        for (i = ind_first_num_elm + 2; a[i] != ','; i++) {
-            if (error == 0) {
-                if (a[i] == ')') {
-                    error = 1;
-                    printf("\nError at column %d: expected ',' and '<double>'\n", i);
-                    break;
-                }
-                if (isdigit(a[i]) == 0 && a[i] != '.') {
-                    error = 1;
-                    printf("\nError at column %d: expected '<double>'\n", i);
-                    break;
-                }
-                ind_second_num_elm = i;
-            } else {
-                break;
-            }
-        }
-
-        for (i = ind_open_bracket; i < ind_close_bracket-1; i++)
-        {
-            if (error == 0)
-            {
-                if (a[i] == '.' && isdigit(a[i+1]) == 0)
-                {
-                    error = 1;
-                    printf("\nError at column %d: expected '<double>'\n", i+1);
-                    break;
-                }
-            }
-            else break;
-        }
-
-        for (i = ind_second_num_elm + 3; i < ind_close_bracket; i++) {
-            if (error == 0) {
-                if ((isdigit(a[i]) == 0 && a[i] != '.') || a[i]=='0') {
-                    if (a[i] == ')' || a[i] == '(' || a[i] == ' ') {
-                        break;
-                    }
-                    error = 1;
-                    printf("\nError at column %d: expected '<double>'\n", i);
-                    break;
-                }
-                ind_last_num_elm = i;
-            } else {
-                break;
-            }
-        }
-        for (i = ind_last_num_elm + 1; i < l; i++) {
-            if (error == 0) {
-                if (a[i] != ')') {
-                    error = 1;
-                    printf("\nError at column %d: expected ')'\n", i);
-                    break;
-                } else {
-                    ind_close_bracket = i;
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-        for (i = ind_close_bracket + 1; i < l; i++) {
-            if (error == 0) {
-                if (a[i] == '\n') {
-                    break;
-                }
-                if (a[i] != ' ') {
-                    error = 1;
-                    printf("\nError at column %d: unexpected token\n", i);
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-        if (error == 0) {
-            printf("\nNo Errors\n");
-        }
-        error = 0;
-    }
-    parser(a);
-    
+    printf("%d", a);
     return 0;
-
 }
